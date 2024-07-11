@@ -1,0 +1,7 @@
+valida:
+  email: "seumadruga@vila.com.br"
+  senha: "14alugueis@"
+
+invalida:
+  email: "chiquinha@vila.com"
+  senha: "123456"
