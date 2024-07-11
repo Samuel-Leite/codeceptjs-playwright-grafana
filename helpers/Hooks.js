@@ -1,8 +1,9 @@
+/* eslint-disable max-len */
 /* eslint-disable class-methods-use-this */
 const Helper = require('@codeceptjs/helper')
 const fs = require('fs').promises
 const path = require('path')
-const { exec } = require('child_process')
+// const { exec } = require('child_process')
 
 class Hooks extends Helper {
   async _init() {
@@ -48,20 +49,35 @@ class Hooks extends Helper {
     console.log('🎉------------------ Testes concluídos! --------------------🏁')
   }
 
-  _beforeStep() {
-    console.log('🚦 Preparando para executar o próximo Step...')
+  _beforeStep(step) {
+    console.log(`🚦 Preparando para executar o step: ${step.name}`)
+    this.stepStartTime = Date.now()
   }
 
-  _afterStep() {
-    console.log('✅ Step concluído com sucesso!')
+  _afterStep(step) {
+    // Após cada step
+    const stepEndTime = Date.now()
+    const stepExecutionTime = stepEndTime - this.stepStartTime
+    console.log(`✅ Step "${step.name}" concluído em: ${stepExecutionTime}ms`)
+
+    // Exemplo de captura de tempo de carregamento de página
+    if (step.name === 'amOnPage') {
+      const pageLoadTime = stepExecutionTime
+      console.log(`🌐 Tempo de carregamento da página: ${pageLoadTime}ms`)
+      // Envie para o InfluxDB ou outro serviço
+    }
   }
 
   _beforeSuite() {
     console.log('📂 Preparando para iniciar uma nova suite de testes...')
+    this.suiteStartTime = Date.now()
   }
 
   _afterSuite() {
     console.log('🏁 Suite de testes concluída com sucesso!')
+    const suiteEndTime = Date.now()
+    const suiteExecutionTime = suiteEndTime - this.suiteStartTime
+    console.log(`ℹ️ Tempo total da suite: ${suiteExecutionTime}ms`)
   }
 
   _passed() {
